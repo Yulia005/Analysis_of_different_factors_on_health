@@ -1,0 +1,59 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+import seaborn as sns
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+         
+state = pd.read_csv('/kaggle/input/sleep-health-and-lifestyle-dataset/Sleep_health_and_lifestyle_dataset.csv')
+
+//frequency table
+binnedAge = pd.cut(state['Age'], 8)
+binnedAge.value_counts(sort=False)
+
+//histogram
+ax = state['Age'].plot.hist(
+figsize=(7, 7), color='purple', rwidth=.95, grid=True)
+ax.set_xlabel('People age')
+ax.set_xticks(range(min(state['Age']), max(state['Age'])+4, 4))
+
+//Contour plot 
+plt.figure(figsize=(8, 6))
+sns.kdeplot(data=state.sample(300), x='Age', y='Sleep Duration')
+plt.xlabel('Age')
+plt.ylabel('Sleep duration')
+plt.title('Contour plot')
+
+//percentile
+Age = state['Age']
+series = pd.Series(Age)
+percentile_30 = series.quantile(0.30)
+print("30th percentile:", percentile_30)
+
+//box plot
+plt.figure(figsize= (10, 10))
+sns.boxplot(x= 'Occupation', y ='Sleep Duration', data=state)
+plt.xlabel('Occupation')
+plt.ylabel('Sleep Duration')
+plt.title ('Box plot')
+plt.show()
+
+//Correlation matrix
+subset_df = state[['Age', 'Physical Activity Level', 'Stress Level', 'Daily Steps', 'Sleep Duration']]
+cor_matrix = subset_df.corr()
+
+plt.figure(figsize=(6, 6))
+sns.heatmap(cor_matrix, annot=True, cmap='viridis', center=0)
+plt.title('Correlation Matrix')
+plt.show()
+
