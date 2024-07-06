@@ -1,0 +1,42 @@
+import random 
+low_sleep_group = state[state['Sleep Duration']<6]['Physical Activity Level']
+high_sleep_group = state[state['Sleep Duration']>=6]['Physical Activity Level']
+
+plt.boxplot(x=[low_sleep_group, high_sleep_group], patch_artist = True)
+plt.xlabel('Group')
+plt.ylabel('Physical Activity Level')
+plt.title('Box plot of dependency physical activity level from sleep duration ')
+plt.xticks([1, 2], ['Sleep duration < 6', 'Sleep duration >= 6'])
+plt.grid(True)  
+plt.show()
+
+mean_lg = low_sleep_group.mean()
+mean_hg = high_sleep_group.mean()
+
+print('Mean value of low sleep group:', mean_lg)
+print('Mean value of high sleep group:', mean_hg)
+print('Difference in means:', mean_hg-mean_lg)
+
+def perm_test(x, nA, nB):
+    combined_data = np.concatenate((x[:nA], x[-nB:]))  
+    np.random.shuffle(combined_data)  
+    perm_A = combined_data[:nA]  
+    perm_B = combined_data[nA:]  
+    
+    diff_means = np.mean(perm_B) - np.mean(perm_A)  
+    
+    return diff_means
+
+nA = state[state['Sleep Duration'] < 6].shape[0]
+nB = state[state['Sleep Duration'] >= 6].shape[0]
+
+print("Difference in means (permutation test):", perm_diff)
+
+random.seed(1)
+perm_diffs = [perm_test(state['Physical Activity Level'], nA, nB) for _ in range(1000)]
+fig, ax = plt.subplots(figsize=(8, 6))
+ax.hist(perm_diffs, bins=40, rwidth=0.9)
+ax.axvline(x=mean_hg - mean_lg, color='red', lw=1)
+ax.set_xlabel('Differences between means')
+ax.set_ylabel('Frequency')
+plt.show()
