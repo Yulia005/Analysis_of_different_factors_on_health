@@ -1,4 +1,23 @@
+import numpy as np # linear algebra
+import pandas as pd # data processing, CSV file I/O (e.g. pd.read_csv)
+import matplotlib.pyplot as plt
+from sqlalchemy import create_engine
+import seaborn as sns
+
+from sklearn.linear_model import LinearRegression
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
+from sklearn.metrics import r2_score
+
+import os
+for dirname, _, filenames in os.walk('/kaggle/input'):
+    for filename in filenames:
+        print(os.path.join(dirname, filename))
+         
+state = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 import random 
+
 low_sleep_group = state[state['Sleep Duration']<6]['Physical Activity Level']
 high_sleep_group = state[state['Sleep Duration']>=6]['Physical Activity Level']
 
