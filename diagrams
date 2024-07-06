@@ -15,7 +15,7 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
     for filename in filenames:
         print(os.path.join(dirname, filename))
          
-state = pd.read_csv('/kaggle/input/sleep-health-and-lifestyle-dataset/Sleep_health_and_lifestyle_dataset.csv')
+state = pd.read_csv('Sleep_health_and_lifestyle_dataset.csv')
 
 //frequency table
 binnedAge = pd.cut(state['Age'], 8)
