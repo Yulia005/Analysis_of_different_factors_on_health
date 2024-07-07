@@ -34,6 +34,14 @@ plt.xlabel('Age')
 plt.ylabel('Sleep duration')
 plt.title('Contour plot')
 
+//violin plot
+fig, ax = plt.subplots(figsize=(5, 5))
+sns.violinplot(data=data,x='BMI Category', y='Physical Activity Level',
+ax=ax, inner='quartile', color='gray')
+ax.set_xlabel('Категорії BMI')
+ax.set_ylabel('Рівень фізичних активностей')
+
+
 //percentile
 Age = state['Age']
 series = pd.Series(Age)
