@@ -34,28 +34,34 @@ mean_hg = high_sleep_group.mean()
 
 print('Mean value of low sleep group:', mean_lg)
 print('Mean value of high sleep group:', mean_hg)
-print('Difference in means:', mean_hg-mean_lg)
+obs_diff= mean_hg-mean_lg
+print('Difference in means:',obs_diff)
 
 def perm_test(x, nA, nB):
     combined_data = np.concatenate((x[:nA], x[-nB:]))  
     np.random.shuffle(combined_data)  
     perm_A = combined_data[:nA]  
     perm_B = combined_data[nA:]  
-    
     diff_means = np.mean(perm_B) - np.mean(perm_A)  
-    
     return diff_means
 
 nA = state[state['Sleep Duration'] < 6].shape[0]
 nB = state[state['Sleep Duration'] >= 6].shape[0]
 
-print("Difference in means (permutation test):", perm_diff)
-
 random.seed(1)
 perm_diffs = [perm_test(state['Physical Activity Level'], nA, nB) for _ in range(1000)]
 fig, ax = plt.subplots(figsize=(8, 6))
 ax.hist(perm_diffs, bins=40, rwidth=0.9)
-ax.axvline(x=mean_hg - mean_lg, color='red', lw=1)
 ax.set_xlabel('Differences between means')
 ax.set_ylabel('Frequency')
 plt.show()
+
+p_value = np.sum(np.abs(perm_diffs) >= np.abs(obs_diff)) / len(perm_diffs)
+print(f"p-value: {p_value}")
+
+alpha = 0.05
+if p_value < alpha:
+    print("Reject H0: The average level of physical activity varies depending on sleep duration.")
+else:
+    print("Fail to reject H0: There is no statistically significant difference in the average level of physical activity between groups.")
+
